@@ -34,9 +34,9 @@ docker-compose up --build
 
 ---
 
-### 🧪 API Endpoints
+## 🧪 API Endpoints
 
-#### Create User
+### Create User
 
 ```
 POST /user
@@ -53,10 +53,51 @@ Content-Type: application/json
 }
 ```
 
-#### Delete User
+**Response:**
+- `201 Created` with the created user object
+
+---
+
+### Delete User
 
 ```
 DELETE /user/:id
+```
+
+**Response:**
+- `204 No Content` if deleted successfully
+
+---
+
+## 📖 API Usage Guide
+
+### 1. Create a User
+
+Send a POST request to `/user` with the following JSON body:
+
+```json
+{
+  "firstName": "Jane",
+  "lastName": "Smith",
+  "birthday": "1985-12-25T00:00:00.000Z",
+  "timezone": "Europe/London"
+}
+```
+
+Example using `curl`:
+```bash
+curl -X POST http://localhost:3000/user \
+  -H "Content-Type: application/json" \
+  -d '{"firstName":"Jane","lastName":"Smith","birthday":"1985-12-25T00:00:00.000Z","timezone":"Europe/London"}'
+```
+
+### 2. Delete a User
+
+Send a DELETE request to `/user/:id` (replace `:id` with the user's ID):
+
+Example using `curl`:
+```bash
+curl -X DELETE http://localhost:3000/user/1
 ```
 
 ---
