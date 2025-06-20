@@ -2,8 +2,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { PrismaClient, MessageLog } from '@prisma/client';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js';
 import cron from 'node-cron';
 import axios from 'axios';
 
