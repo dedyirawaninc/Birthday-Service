@@ -40,7 +40,11 @@ const sendMessage = async (
       },
     });
   } catch (err) {
-    console.error(`[SEND ERROR] ${fullName} on ${type} :: `, err.message);
+    if (err instanceof Error) {
+      console.error(`[SEND ERROR] ${fullName} on ${type} :: `, err.message);
+    } else {
+      console.error(`[SEND ERROR] ${fullName} on ${type} :: `, err);
+    }
   }
 };
 
