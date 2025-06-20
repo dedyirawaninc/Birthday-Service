@@ -6,6 +6,7 @@ import utc from 'dayjs/plugin/utc.js';
 import timezone from 'dayjs/plugin/timezone.js';
 import cron from 'node-cron';
 import axios from 'axios';
+import { getMessageContent, MessageType } from './messages.js'; // <-- updated import
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -16,28 +17,26 @@ app.use(bodyParser.json());
 
 const EMAIL_SERVICE_URL = 'https://email-service.digitalenvision.com.au/send-email';
 
-type MessageType = 'BIRTHDAY';
-
 const sendMessage = async (
   user: { firstName: string; lastName: string; id: number; timezone: string },
   type: MessageType,
   date: Date
 ) => {
   const fullName = `${user.firstName} ${user.lastName}`;
+  const { subject, message } = getMessageContent(type, user); // <-- use abstraction
 
   try {
     await axios.post(EMAIL_SERVICE_URL, {
       to: `${user.firstName}.${user.lastName}@example.com`,
-      subject: 'Happy Birthday!',
-      message: `Hey, ${fullName} it’s your birthday`,
+      subject,
+      message,
     });
 
     await prisma.messageLog.create({
-      data: {
-        userId: user.id,
-        date: date,
-        type,
-      },
+      data: { userId: user.id, date, type },
+    }).catch(e => {
+      if (e.code !== 'P2002') throw e; // P2002 = Unique constraint failed
+      // Already sent, do nothing
     });
   } catch (err) {
     if (err instanceof Error) {
@@ -68,7 +67,7 @@ const checkBirthdays = async () => {
       });
 
       if (!alreadySent) {
-        await sendMessage(user, 'BIRTHDAY', localTime.startOf('day').toDate());
+        await sendMessage(user, MessageType.BIRTHDAY, localTime.startOf('day').toDate());
       }
     }
   }
@@ -93,7 +92,7 @@ const retryUnsentMessages = async () => {
       });
 
       if (!alreadySent) {
-        await sendMessage(user, 'BIRTHDAY', localTime.startOf('day').toDate());
+        await sendMessage(user, MessageType.BIRTHDAY, localTime.startOf('day').toDate());
       }
     }
   }
