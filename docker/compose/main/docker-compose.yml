@@ -1,8 +1,13 @@
-version: '2'
+version: '3.8'
+
 services:
-  php-fpm:
-    image: dedyirawaninc/php_5_6_fpm_alpine:develop
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
     environment:
-      TZ: Asia/Jakarta
-    stdin_open: true
-    tty: true
+      - DATABASE_URL=file:./dev.db
+    command: sh -c "npx prisma migrate deploy && npm run start"
