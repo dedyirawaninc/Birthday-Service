@@ -1,0 +1,13 @@
+{
+  "Name": "default",
+  "Metadata": {
+    "StackOrchestrator": "swarm"
+  },
+  "Endpoints": {
+    "docker": {
+      "Host": "unix:///var/run/docker.sock",
+      "SkipTLSVerify": false
+    }
+  },
+  "TLSMaterial": {}
+}
