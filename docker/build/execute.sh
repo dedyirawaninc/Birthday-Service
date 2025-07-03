@@ -27,6 +27,7 @@ fi
 echo [$BUILD] [$BRNCH] [$GROUP] [$IMAGE]
 cat ./${BUILD}
 ls -al
+IMAGE=$(echo "$IMAGE" | tr '[:upper:]' '[:lower:]')
 if [ "$TYPE" == "Darwin" ]; then
   # ERROR [internal] load metadata for docker.io
   if [ -f ~/.docker/config.json ]; then
